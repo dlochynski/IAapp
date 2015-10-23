@@ -1,0 +1,7 @@
+<div ng-if="admin">
+	<ul ng-repeat="clinic in clinics">
+		<li>{{clinic.name}}</li>
+	</ul>
+
+	<input ng-model="name"> <button ng-click="create(name)">Add</button>
+</div>

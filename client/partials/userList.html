@@ -1,0 +1,13 @@
+<div ng-controller="adminController">
+<table ng-if="admin">
+<thead><tr><td>username</td>
+<td>active</td></tr></thead>
+<tbody ng-repeat="obj in userList">
+	<tr ng-show="!obj.active">
+		<td>{{obj.username}}</td>
+		<td>{{obj.active}}</td>
+		<td><button ng-click="activateUser(obj)">Activate</button></td>
+	</tr>
+</tbody>
+</table>
+</div>
