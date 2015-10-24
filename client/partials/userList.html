@@ -1,5 +1,5 @@
 <div ng-controller="adminController">
-<table ng-if="admin">
+<table ng-if="user.role == 'Admin'">
 <thead><tr><td>username</td>
 <td>active</td></tr></thead>
 <tbody ng-repeat="obj in userList">

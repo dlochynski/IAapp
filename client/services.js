@@ -17,8 +17,8 @@ angular.module('myApp').factory('AuthService', ['$q', '$timeout', '$http',
       return false;
     }
 
-    function getUserRole() {
-      if (user) return user.role;
+    function getUser() {
+      if (user) return user;
       return false;
     }
 
@@ -108,7 +108,7 @@ angular.module('myApp').factory('AuthService', ['$q', '$timeout', '$http',
     return ({
       isLoggedIn: isLoggedIn,
       getUserStatus: getUserStatus,
-      getUserRole: getUserRole,
+      getUser: getUser,
       login: login,
       logout: logout,
       register: register
@@ -171,6 +171,7 @@ angular.module('myApp').factory('ClinicService', ['$q', '$http',
     var deferred = $q.defer();
 
     function getAll() {
+      console.log('getting clinics');
       $http.get('/clinic/all')
         .success(function(data, status) {
           if (status === 200) {
@@ -203,12 +204,29 @@ angular.module('myApp').factory('ClinicService', ['$q', '$http',
           deferred.reject();
         });
       return deferred.promise;
+    }
+    function remove(clinic) {
+      var deferred = $q.defer();
 
+      $http.delete('/clinic/delete/' + clinic.name)
+        .success(function(status) {
+          console.log(status);
+          if (status === 200) {
+            deferred.resolve();
+          } else {
+            deferred.reject();
+          }
+        })
+        // handle error
+        .error(function(data) {
+          deferred.reject();
+        });
+      return deferred.promise;
     }
     return ({
       create: create,
-      getAll: getAll
-
+      getAll: getAll,
+      remove: remove
     });
 
   }

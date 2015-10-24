@@ -1,5 +1,5 @@
-angular.module('myApp').controller('loginController', ['$scope', '$location', 'AuthService',
-  function($scope, $location, AuthService) {
+angular.module('myApp').controller('loginController', ['$scope', '$location', '$rootScope', 'AuthService',
+  function($scope, $location, $rootScope, AuthService) {
 
     $scope.login = function() {
 
@@ -11,12 +11,10 @@ angular.module('myApp').controller('loginController', ['$scope', '$location', 'A
       AuthService.login($scope.loginForm.username, $scope.loginForm.password)
         // handle success
         .then(function() {
-          console.log(AuthService.getUserRole)
-          if (AuthService.getUserRole() === 'Admin') {
-            $location.path('/admin');
-          } else {
-            $location.path('/');
-          }
+          // console.log(AuthService.getUserRole)
+          $rootScope.user = AuthService.getUser();
+          console.log($rootScope.user);
+          $location.path('/');
           $scope.disabled = false;
           $scope.loginForm = {};
         })
@@ -80,8 +78,6 @@ angular.module('myApp').controller('registerController', ['$scope', '$location',
 
 angular.module('myApp').controller('adminRouteController', ['$scope', 'AuthService', '$location',
   function($scope, AuthService, $location) {
-    $scope.admin = AuthService.getUserRole() === 'Admin' ? true : false;
-
     $scope.showUserList = function() {
       $location.path('/users');
     };
@@ -94,8 +90,6 @@ angular.module('myApp').controller('adminRouteController', ['$scope', 'AuthServi
 
 angular.module('myApp').controller('adminController', ['$scope', 'AuthService', 'AdminService', '$location',
   function($scope, AuthService, AdminService, $location) {
-    console.log(AuthService);
-    $scope.admin = AuthService.getUserRole() === 'Admin' ? true : false;
     AdminService.getUserList().then(function(data) {
       $scope.userList = data;
     });
@@ -110,16 +104,23 @@ angular.module('myApp').controller('adminController', ['$scope', 'AuthService', 
 
 angular.module('myApp').controller('clinicController', ['$scope', 'AuthService', 'ClinicService', '$location',
   function($scope, AuthService, ClinicService, $location) {
-    console.log(AuthService);
-    $scope.admin = AuthService.getUserRole() === 'Admin' ? true : false;
     ClinicService.getAll().then(function(data) {
       $scope.clinics = data;
     });
     $scope.create = function(name) {
       ClinicService.create(name).then(function() {
-        $scope.clinics.push({name: name})
+        $scope.clinics.push({
+          name: name
+        })
       });
     };
+    $scope.remove = function(clinic) {
+      console.log('deleting');
+      ClinicService.remove(clinic).then(function() {
+        console.log('removed');
+        $scope.clinics.remove(clinic)
+      });
+    }
 
 
   }

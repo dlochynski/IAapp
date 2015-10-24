@@ -5,10 +5,12 @@ User = require('../models/user.js');
 
 
 router.post('/register', function(req, res) {
+  var role = req.doctor ? 'Doctor': 'User';
+
   User.register(new User({
     username: req.body.username,
-    role: 'User',
-    active: false
+    role: role,
+    active: req.doctor
   }), req.body.password, function(err, account) {
     if (err) {
       return res.status(500).json({
