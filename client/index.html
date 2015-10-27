@@ -17,6 +17,26 @@
                 <li>
                     <a ng-click="showClinics()">Clinics</a>
                 </li>
+                 <li>
+                    <a ng-click="showDoctors()">DoctorList</a>
+                </li>
+                <li>
+                    <a ng-click="showDuties()">Duties</a>
+                </li>
+            </ul>
+        </div>
+         <div ng-show="user.role == 'Doctor'">
+            <ul ng-controller="adminRouteController">
+                <li>
+                    <a ng-click="showDuties()">Duties</a>
+                </li>
+            </ul>
+        </div>
+        <div ng-show="user.role == 'User'">
+            <ul ng-controller="adminRouteController">
+                <li>
+                    <a ng-click="showClinics()">Clinics</a>
+                </li>
             </ul>
         </div>
     </nav>

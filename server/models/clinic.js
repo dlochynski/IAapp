@@ -6,4 +6,4 @@ var Clinic = new Schema({
   name: String
 });
 
-module.exports = mongoose.model('Clinics', Clinic);
+module.exports = mongoose.model('clinics', Clinic);

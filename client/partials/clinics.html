@@ -5,3 +5,9 @@
 
 	<input ng-model="name"> <button ng-click="create(name)">Add</button>
 </div>
+
+<div ng-if="user.role == 'User'" ng-controller="clinicController">
+	<ul ng-repeat="clinic in clinics">
+		<li><p ng-click="showVisits(clinic)">{{clinic.name}}</p></li> 
+	</ul>
+</div>

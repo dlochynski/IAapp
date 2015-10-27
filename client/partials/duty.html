@@ -1,0 +1,35 @@
+<div ng-if="user.role == 'Admin'" ng-controller="dutyController">
+    <form novalidate ng-submit="create($event)">
+        <select ng-options="doctor.username for doctor in doctors track by doctor._id" ng-model="selectedDoctor"></select>
+        <select ng-options="clinic.name for clinic in clinics track by clinic._id" ng-model="selectedClinic"></select>
+        <label for="day">Day number</label>
+        <input id="day" type="number" ng-model="day">
+        <label for="hour-start"></label>
+        <input id="hour-start" type="number" ng-model="hourStart">
+        <label for="hour-end"></label>
+        <input id="hour-end" type="number" ng-model="hourEnd">
+        <input type="submit" value="Create Duty" />
+    </form>
+</div>
+
+<div ng-if="user.role == 'Doctor'" ng-controller="dutyController">
+	<table>
+		<thead>
+			<tr>
+				<td>Clinic name</td>
+				<td>Day number</td>
+				<td>Start Hour</td>
+				<td>End Hour</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="duty in duties">
+			<td>{{duty.clinicName}}</td>
+				<td>{{duty.day}}</td>
+				<td>{{duty.hourStart}}</td>
+				<td>{{duty.hourEnd}}</td>
+			</tr>
+		</tbody>
+	</table>	
+</div>
+

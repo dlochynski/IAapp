@@ -22,7 +22,7 @@ angular.module('myApp').factory('AuthService', ['$q', '$timeout', '$http',
       return false;
     }
 
-    function login(username, password) {
+    function login(username, password, doctor) {
 
       // create a new instance of deferred
       var deferred = $q.defer();
@@ -76,7 +76,7 @@ angular.module('myApp').factory('AuthService', ['$q', '$timeout', '$http',
 
     }
 
-    function register(username, password) {
+    function register(username, password, doctor) {
 
       // create a new instance of deferred
       var deferred = $q.defer();
@@ -84,7 +84,8 @@ angular.module('myApp').factory('AuthService', ['$q', '$timeout', '$http',
       // send a post request to the server
       $http.post('/user/register', {
           username: username,
-          password: password
+          password: password,
+          doctor: doctor
         })
         // handle success
         .success(function(data, status) {
@@ -205,11 +206,12 @@ angular.module('myApp').factory('ClinicService', ['$q', '$http',
         });
       return deferred.promise;
     }
+
     function remove(clinic) {
       var deferred = $q.defer();
 
       $http.delete('/clinic/delete/' + clinic.name)
-        .success(function(status) {
+        .success(function(data, status) {
           console.log(status);
           if (status === 200) {
             deferred.resolve();
@@ -223,10 +225,121 @@ angular.module('myApp').factory('ClinicService', ['$q', '$http',
         });
       return deferred.promise;
     }
+
+     function getSpecificClinic(id) {
+      var deferred = $q.defer();
+
+      $http.get('/clinic/' + id)
+        .success(function(data, status) {
+          console.log(status);
+          if (status === 200) {
+            deferred.resolve(data);
+          } else {
+            deferred.reject();
+          }
+        })
+        // handle error
+        .error(function(data) {
+          deferred.reject();
+        });
+      return deferred.promise;
+    }
     return ({
       create: create,
       getAll: getAll,
-      remove: remove
+      remove: remove,
+      getSpecificClinic: getSpecificClinic
+    });
+
+  }
+]);
+
+angular.module('myApp').factory('DoctorService', ['$q', '$http',
+  function($q, $http) {
+    var deferred = $q.defer();
+
+    function getAll() {
+      $http.get('/user/allDoctors')
+        .success(function(data, status) {
+          if (status === 200) {
+            deferred.resolve(data);
+          } else {
+            deferred.reject();
+          }
+        })
+        // handle error
+        .error(function(data) {
+          deferred.reject();
+        });
+      return deferred.promise;
+    }
+
+
+    return ({
+      getAll: getAll
+    });
+
+  }
+]);
+
+angular.module('myApp').factory('DutyService', ['$q', '$http',
+  function($q, $http) {
+    var deferred = $q.defer();
+
+
+    function create(obj) {
+      $http.post('/duty/create', obj)
+        .success(function(data, status) {
+          if (status === 200) {
+            deferred.resolve(data);
+          } else {
+            deferred.reject();
+          }
+        })
+        // handle error
+        .error(function(data) {
+          deferred.reject();
+        });
+      return deferred.promise;
+    }
+
+    function getSpecificDuties(id) {
+      $http.get('/duty/doctor/' + id)
+        .success(function(data, status) {
+          if (status === 200) {
+            deferred.resolve(data);
+          } else {
+            deferred.reject();
+          }
+        })
+        // handle error
+        .error(function(data) {
+          deferred.reject();
+        });
+      return deferred.promise;
+    }
+
+    function getClinicDuties(clinicId) {
+       $http.get('/duty/clinic/' + clinicId)
+        .success(function(data, status) {
+          if (status === 200) {
+            deferred.resolve(data);
+          } else {
+            deferred.reject();
+          }
+        })
+        // handle error
+        .error(function(data) {
+          deferred.reject();
+        });
+      return deferred.promise;
+    }
+
+
+    return ({
+      create: create,
+      getSpecificDuties: getSpecificDuties,
+      getClinicDuties: getClinicDuties
     });
 
   }

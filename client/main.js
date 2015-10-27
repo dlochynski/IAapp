@@ -40,6 +40,18 @@
           restricted: true
         }
       })
+      .when('/doctors', {
+        templateUrl: 'partials/doctors.html',
+        access: {
+          restricted: true
+        }
+      })
+      .when('/duties', {
+        templateUrl: 'partials/duty.html',
+        access: {
+          restricted: true
+        }
+      })
       .otherwise({
         redirectTo: '/'
       });

@@ -84,7 +84,13 @@ angular.module('myApp').controller('adminRouteController', ['$scope', 'AuthServi
     $scope.showClinics = function() {
       $location.path('/clinics')
     };
+    $scope.showDoctors = function() {
+      $location.path('/doctors')
+    };
 
+    $scope.showDuties = function() {
+      $location.path('/duties')
+    };
   }
 ]);
 
@@ -102,8 +108,8 @@ angular.module('myApp').controller('adminController', ['$scope', 'AuthService', 
   }
 ]);
 
-angular.module('myApp').controller('clinicController', ['$scope', 'AuthService', 'ClinicService', '$location',
-  function($scope, AuthService, ClinicService, $location) {
+angular.module('myApp').controller('clinicController', ['$scope', 'AuthService', 'ClinicService', '$location', 'DutyService',
+  function($scope, AuthService, ClinicService, $location, DutyService) {
     ClinicService.getAll().then(function(data) {
       $scope.clinics = data;
     });
@@ -115,13 +121,92 @@ angular.module('myApp').controller('clinicController', ['$scope', 'AuthService',
       });
     };
     $scope.remove = function(clinic) {
-      console.log('deleting');
       ClinicService.remove(clinic).then(function() {
-        console.log('removed');
-        $scope.clinics.remove(clinic)
+        console.log($scope.clinics);
+        $scope.clinics = $scope.clinics.filter(function(element) {
+          if (clinic !== element) return element;
+        });
+      });
+    }
+    $scope.showVisits = function(clinic) {
+      DutyService.getClinicDuties(clinic._id).then(function(data) {
+        console.log(data);
       });
     }
 
+  }
+
+]);
+angular.module('myApp').controller('doctorController', ['$scope', 'AuthService', 'DoctorService',
+  function($scope, AuthService, DoctorService) {
+    DoctorService.getAll().then(function(data) {
+      $scope.doctors = data;
+    });
+
+    $scope.register = function() {
+      AuthService.register($scope.registerForm.username, $scope.registerForm.password, true);
+      $scope.doctors.push({
+        username: $scope.registerForm.username
+      });
+    };
+
+  }
+]);
+
+angular.module('myApp').controller('dutyController', ['$scope', 'ClinicService', 'DoctorService', 'DutyService',
+  function($scope, ClinicService, DoctorService, DutyService) {
+    if ($scope.user.role == "Admin") {
+      DoctorService.getAll().then(function(data) {
+        $scope.doctors = data;
+
+        if (data.length) $scope.selectedDoctor = data[0];
+      });
+      ClinicService.getAll().then(function(data) {
+        $scope.clinics = data;
+        if (data.length) $scope.selectedClinic = data[0];
+      });
+    } else {
+      console.log($scope.user._id);
+      DutyService.getSpecificDuties($scope.user._id).then(function(data) {
+        $scope.duties = data;
+        $scope.duties.forEach(function(element) {
+          ClinicService.getSpecificClinic(element.clinicId).then(function(data) {
+           element.clinicName = data.name;
+          });
+
+        });
+      });
+    }
+    $scope.create = function(e) {
+      var obj = {
+        doctorId: $scope.selectedDoctor._id,
+        clinicId: $scope.selectedClinic._id,
+        day: $scope.day,
+        hourStart: $scope.hourStart,
+        hourEnd: $scope.hourEnd
+      };
+      DutyService.create(obj);
+    }
+
+  }
+]);
+
+angular.module('myApp').controller('userController', ['$scope', 'ClinicService', 'DoctorService', 'DutyService',
+  function($scope, ClinicService, DoctorService, DutyService) {
+      ClinicService.getAll().then(function(data) {
+        $scope.clinics = data;
+        if (data.length) $scope.selectedClinic = data[0];
+      });
+    $scope.create = function(e) {
+      var obj = {
+        doctorId: $scope.selectedDoctor._id,
+        clinicId: $scope.selectedClinic._id,
+        day: $scope.day,
+        hourStart: $scope.hourStart,
+        hourEnd: $scope.hourEnd
+      };
+      DutyService.create(obj);
+    }
 
   }
 ]);

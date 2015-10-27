@@ -1,16 +1,15 @@
 var express = require('express'),
   router = express.Router(),
   passport = require('passport');
-User = require('../models/user.js');
+var User = require('../models/user.js');
 
 
 router.post('/register', function(req, res) {
-  var role = req.doctor ? 'Doctor': 'User';
-
+  var role = req.body.doctor ? 'Doctor': 'User';
   User.register(new User({
     username: req.body.username,
     role: role,
-    active: req.doctor
+    active: req.body.doctor
   }), req.body.password, function(err, account) {
     if (err) {
       return res.status(500).json({
@@ -88,6 +87,16 @@ router.put('/activate', function(req, res) {
       status: "Update successful"
     });
   });
+});
+
+router.get('/allDoctors', function(req, res) {
+  User.find(function(err, users) {
+    if (err) res.send(err);
+    users = users.filter(function(element) {
+      if (element.role === 'Doctor') return element;
+    });
+    res.status(200).json(users);
+  })
 });
 
 module.exports = router;

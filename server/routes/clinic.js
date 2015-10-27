@@ -1,6 +1,6 @@
 var express = require('express'),
   router = express.Router();
-Clinic = require('../models/clinic.js');
+var Clinic = require('../models/clinic.js');
 
 router.post('/create', function(req, res) {
   var clinic = new Clinic({
@@ -22,6 +22,13 @@ router.get('/all', function(req, res) {
     res.json(clinics);
   });
 });
+
+router.get('/:id',function(req, res) {
+  Clinic.findOne({_id: req.params.id},function(err, clinic) {
+     if (err) res.status(500).send(err);
+      res.status(200).json(clinic);
+  })
+})
 router.delete('/delete/:name', function(req, res) {
   Clinic.remove({
     name: req.params.name
