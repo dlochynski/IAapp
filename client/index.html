@@ -5,11 +5,14 @@
     <meta charset="utf-8">
     <title>IA App</title>
     <!-- styles -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+    <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>
     <nav class="menu" ng-cloak>
-        <div ng-show="user.role == 'Admin'">
+        <div ng-show="user.role == 'Admin'" class="top-nav">
             <ul ng-controller="adminRouteController">
                 <li>
                     <a ng-click="showUserList()">UserList</a>
@@ -17,7 +20,7 @@
                 <li>
                     <a ng-click="showClinics()">Clinics</a>
                 </li>
-                 <li>
+                <li>
                     <a ng-click="showDoctors()">DoctorList</a>
                 </li>
                 <li>
@@ -25,21 +28,21 @@
                 </li>
             </ul>
         </div>
-         <div ng-show="user.role == 'Doctor'">
+        <div ng-show="user.role == 'Doctor'" class="top-nav">
             <ul ng-controller="adminRouteController">
                 <li>
                     <a ng-click="showDuties()">Duties</a>
                 </li>
             </ul>
         </div>
-        <div ng-show="user.role == 'User'">
+        <div ng-show="user.role == 'User'" class="top-nav">
             <ul ng-controller="adminRouteController">
                 <li>
                     <a ng-click="showClinics()">Clinics</a>
                 </li>
             </ul>
         </div>
-        <ul ng-controller="adminRouteController">
+        <ul ng-controller="adminRouteController" class="user-nav">
             <li ng-if="!user"><a href="" ng-click="showLogin()">Login</a></li>
             <li ng-if="!user"><a href="" ng-click="showRegister()">Register</a></li>
             <li ng-if="user"><a href="" ng-click="logout()">Logout</a></li>

@@ -1,0 +1,33 @@
+.user-nav {
+	position: absolute;
+	right:10px;
+	top: 10px;
+}
+
+.user-nav li {
+	display: inline-block;
+	padding: 15px;
+	text-decoration: none;
+}
+
+.top-nav {
+	display: table;
+	width: 80%;
+}
+
+.top-nav li {
+	display: table-cell;
+	width: 1%;
+	padding: 15px;
+	font-size: 16px;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.clinic-list li {
+	cursor: pointer;
+}
+
+.doctors {
+	padding-left: 20px;
+}

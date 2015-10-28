@@ -9,20 +9,27 @@
     <button ng-click="create(name)">Add</button>
 </div>
 <div ng-if="user.role == 'User'" ng-controller="clinicController">
-    <ul>
+    <p>Lista klinik</p>
+    <ul class="clinic-list">
         <li ng-repeat="clinic in clinics">
             <p ng-click="showVisits(clinic)">{{clinic.name}}</p>
         </li>
     </ul>
-    <ul class="doctors">
+    <div class="doctors" ng-if="duties">
+    <p>Lekarze w wybranej klinice</p>
+    <ul>
         <li ng-repeat="doctor in duties">
             <a href="" ng-click="showSpecificDuties(doctor)">{{doctor.doctor.username}}</a>
         </li>
     </ul>
+</div>
     <div ng-if="specificDuties">
+    	<p>Dyżury</p>
     <ul>
+    	<li>Dzień Godzina startu Godzina zakończenia</li>
         <li ng-repeat="duty in specificDuties">
-        	<p>{{duty.hourStart}} {{duty.hourEnd}}</p>
+
+        	<p>{{duty.day}} {{duty.hourStart}} {{duty.hourEnd}}</p>
 
         </li>
     </ul>
