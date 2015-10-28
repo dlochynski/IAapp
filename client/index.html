@@ -39,6 +39,11 @@
                 </li>
             </ul>
         </div>
+        <ul ng-controller="adminRouteController">
+            <li ng-if="!user"><a href="" ng-click="showLogin()">Login</a></li>
+            <li ng-if="!user"><a href="" ng-click="showRegister()">Register</a></li>
+            <li ng-if="user"><a href="" ng-click="logout()">Logout</a></li>
+        </ul>
     </nav>
     <div class="container">
         <div ng-view></div>

@@ -99,4 +99,11 @@ router.get('/allDoctors', function(req, res) {
   })
 });
 
+router.get('/:id',function(req, res) {
+  User.findOne({_id: req.params.id},function(err, user) {
+     if (err) res.status(500).send(err);
+      res.status(200).json(user);
+  });
+})
+
 module.exports = router;

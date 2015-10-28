@@ -76,8 +76,8 @@ angular.module('myApp').controller('registerController', ['$scope', '$location',
   }
 ]);
 
-angular.module('myApp').controller('adminRouteController', ['$scope', 'AuthService', '$location',
-  function($scope, AuthService, $location) {
+angular.module('myApp').controller('adminRouteController', ['$rootScope','$scope', 'AuthService', '$location',
+  function($rootScope,$scope, AuthService, $location) {
     $scope.showUserList = function() {
       $location.path('/users');
     };
@@ -91,6 +91,19 @@ angular.module('myApp').controller('adminRouteController', ['$scope', 'AuthServi
     $scope.showDuties = function() {
       $location.path('/duties')
     };
+    $scope.showLogin = function() {
+      $location.path('/login');
+    }
+    $scope.showRegister = function() {
+      $location.path('/register');
+    }
+    $scope.logout = function() {
+      $rootScope.user = null;
+      AuthService.logout()
+        .then(function() {
+          $location.path('/login');
+        });
+    }
   }
 ]);
 
@@ -108,8 +121,8 @@ angular.module('myApp').controller('adminController', ['$scope', 'AuthService', 
   }
 ]);
 
-angular.module('myApp').controller('clinicController', ['$scope', 'AuthService', 'ClinicService', '$location', 'DutyService',
-  function($scope, AuthService, ClinicService, $location, DutyService) {
+angular.module('myApp').controller('clinicController', ['$scope', 'AuthService', 'ClinicService', '$location', 'DutyService','DoctorService', 'VisitService',
+  function($scope, AuthService, ClinicService, $location, DutyService, DoctorService, VisitService) {
     ClinicService.getAll().then(function(data) {
       $scope.clinics = data;
     });
@@ -130,8 +143,33 @@ angular.module('myApp').controller('clinicController', ['$scope', 'AuthService',
     }
     $scope.showVisits = function(clinic) {
       DutyService.getClinicDuties(clinic._id).then(function(data) {
-        console.log(data);
+        $scope.duties = data;
+        for(var i = 0; i < $scope.duties.length; i++) {
+          var curObj = $scope.duties[i];
+         console.log(i);
+          DoctorService.getDoctor(curObj.doctorId).then(function(dat) {
+           curObj.doctor = dat;
+          });
+        }
       });
+      $scope.addVisit = function(hour) {
+        console.log(hour);
+        var obj ={
+          hour: hour,
+          userId: $scope.user.role,
+          clinicId: $scope.specificDuties[0].clinicId,
+          doctorId: $scope.specificDuties[0].doctorId
+        }
+       VisitService.create(obj);
+      }
+    }
+
+    $scope.showSpecificDuties = function(doctor) {
+      DutyService.getSpecificDuties(doctor._id) .then(function(data) {
+        $scope.specificDuties = data;
+        console.log(data);
+      })
+      
     }
 
   }
@@ -191,22 +229,23 @@ angular.module('myApp').controller('dutyController', ['$scope', 'ClinicService',
   }
 ]);
 
-angular.module('myApp').controller('userController', ['$scope', 'ClinicService', 'DoctorService', 'DutyService',
-  function($scope, ClinicService, DoctorService, DutyService) {
-      ClinicService.getAll().then(function(data) {
-        $scope.clinics = data;
-        if (data.length) $scope.selectedClinic = data[0];
-      });
-    $scope.create = function(e) {
-      var obj = {
-        doctorId: $scope.selectedDoctor._id,
-        clinicId: $scope.selectedClinic._id,
-        day: $scope.day,
-        hourStart: $scope.hourStart,
-        hourEnd: $scope.hourEnd
-      };
-      DutyService.create(obj);
-    }
+// angular.module('myApp').controller('userController', ['$scope', 'ClinicService', 'DoctorService', 'DutyService',
+//   function($scope, ClinicService, DoctorService, DutyService) {
+//       ClinicService.getAll().then(function(data) {
+//         $scope.clinics = data;
+//         if (data.length) $scope.selectedClinic = data[0];
+//         conso
+//       });
+//     $scope.create = function(e) {
+//       var obj = {
+//         doctorId: $scope.selectedDoctor._id,
+//         clinicId: $scope.selectedClinic._id,
+//         day: $scope.day,
+//         hourStart: $scope.hourStart,
+//         hourEnd: $scope.hourEnd
+//       };
+//       DutyService.create(obj);
+//     }
 
-  }
-]);
+//   }
+// ]);

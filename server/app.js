@@ -17,6 +17,7 @@ mongoose.connect('mongodb://myapp:myapp@ds051933.mongolab.com:51933/myapp');
 var User = require('./models/user.js');
 var Clinic = require('./models/clinic.js');
 var Duty = require('./models/duty.js');
+var Visit = require('./models/visit.js');
 
 // create instance of express
 var app = express();
@@ -25,6 +26,7 @@ var app = express();
 var routes = require('./routes/api.js');
 var clinic = require('./routes/clinic.js');
 var duty = require('./routes/duty.js');
+var visit = require('./routes/visit.js');
 
 // define middleware
 app.use(express.static(path.join(__dirname, '../client')));
@@ -50,6 +52,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use('/user/', routes);
 app.use('/clinic/', clinic);
 app.use('/duty/', duty);
+app.use('/visit/', visit);
 
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, '../client', 'index.html'));

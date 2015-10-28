@@ -274,9 +274,25 @@ angular.module('myApp').factory('DoctorService', ['$q', '$http',
       return deferred.promise;
     }
 
+    function getDoctor(id) {
+      $http.get('/user/' + id)
+        .success(function(data, status) {
+          if (status === 200) {
+            deferred.resolve(data);
+          } else {
+            deferred.reject();
+          }
+        })
+        // handle error
+        .error(function(data) {
+          deferred.reject();
+        });
+      return deferred.promise;
+    }
 
     return ({
-      getAll: getAll
+      getAll: getAll,
+      getDoctor: getDoctor
     });
 
   }
@@ -340,6 +356,32 @@ angular.module('myApp').factory('DutyService', ['$q', '$http',
       create: create,
       getSpecificDuties: getSpecificDuties,
       getClinicDuties: getClinicDuties
+    });
+
+  }
+]);
+
+angular.module('myApp').factory('VisitService', ['$q', '$http',
+  function($q, $http) {
+    var deferred = $q.defer();
+    function create(obj) {
+      $http.post('/visit/create', obj)
+        .success(function(data, status) {
+          if (status === 200) {
+            deferred.resolve(data);
+          } else {
+            deferred.reject();
+          }
+        })
+        // handle error
+        .error(function(data) {
+          deferred.reject();
+        });
+      return deferred.promise;
+    }
+
+    return ({
+      create: create
     });
 
   }
